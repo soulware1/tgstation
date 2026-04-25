@@ -92,6 +92,18 @@
 /datum/supply_pack/imports/dumpstercorpse/generate(atom/A, datum/bank_account/paying_account, crate_override)
 	. = ..()
 	var/mob/living/carbon/human/corpse = locate() in .
+	// below mostly copied from charged black slime extract
+	if(!istype(experiment_subject))
+		return
+	var/list/allowed_species = list()
+	for(var/stype in subtypesof(/datum/species))
+		var/datum/species/try_species = stype
+		if(initial(try_species.changesource_flags) & MIRROR_MAGIC)
+			allowed_species += stype
+	var/datum/species/changed = pick(allowed_species)
+	if(isnull(changed))
+		return
+	corpse.set_species(changed, icon_update = TRUE)
 	corpse.death()
 
 /datum/supply_pack/imports/dumpsterloot
